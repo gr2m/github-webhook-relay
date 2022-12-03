@@ -38,7 +38,7 @@ export default async function start(state) {
     // the websocket is closed and the webhook is deleted.
     ws.send(
       JSON.stringify({
-        Status: 200,
+        Status: 202,
         Header: {},
         Body: Buffer.from("ok", "utf-8").toString("base64"),
       }),

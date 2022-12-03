@@ -88,7 +88,6 @@ test("with secret", async (t) => {
 
     wss.on("connection", function connection(ws) {
       ws.on("message", (data) => {
-        console.log("message");
         t.snapshot(data.toString(), "response");
         relay.stop();
       });
@@ -111,7 +110,6 @@ test("with secret", async (t) => {
     relay.on("start", () => (startReceived = true));
     relay.on("webhook", (event) => t.snapshot(event, "webhook"));
     relay.on("stop", () => {
-      console.log("stop");
       t.true(startReceived);
       wss.close();
       resolve();
