@@ -286,6 +286,10 @@ A response has to be sent back within 10s, otherwise the webhook request will be
 
 Disconnecting from the websocket will automatically delete the repository webhook.
 
+## Contributing
+
+Please see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## License
 
 [ISC](LICENSE)
