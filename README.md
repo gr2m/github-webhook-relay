@@ -9,6 +9,8 @@ A Node.js library that uses the same APIs as the [`gh webhook` plugin](https://g
 
 The `createHookToken` option needs to be set to a [token with the `admin:repo_hook` scope](https://github.com/settings/tokens/new?scopes=admin:repo_hook&description=github-webhook-relay).
 
+### Minimal example
+
 ```js
 import WebhookRelay from "github-webhook-relay";
 
@@ -28,6 +30,51 @@ relay.on("error", (error) => {
 });
 
 relay.start();
+```
+
+### Use with Octokit
+
+```js
+import { App } from "octokit";
+import WebhookRelay from "github-webhook-relay";
+
+const app = new App({
+  appId: process.env.APP_ID,
+  privateKey: process.env.APP_PRIVATE_KEY,
+  webhooks: {
+    secret: process.env.APP_WEBHOOK_SECRET,
+  },
+});
+
+app.webhooks.on("issues.opened", async ({ octokit }) => {
+  const { data: comment } = await octokit.request(
+    "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+    {
+      owner: payload.repository.owner.login,
+      repo: payload.repository.name,
+      issue_number: payload.issue.number,
+      body: "Hello, world!",
+    }
+  );
+
+  console.log("[app] Comment created: %s", comment.html_url);
+});
+
+const relay = new WebhookRelay({
+  owner: "gr2m",
+  repo: "github-webhooks-relay",
+  events: ["issues"],
+  createHookToken: process.env.APP_WEBHOOK_SECRET,
+});
+
+relay.on("webhook", ({ id, name, body, signature, headers }) => {
+  app.webhooks.verifyAndReceive({
+    id,
+    name,
+    payload: body,
+    signature,
+  });
+});
 ```
 
 ## API
@@ -118,21 +165,6 @@ The secret used to sign the webhook payloads. Defaults to no secret.
 
 </td>
     </tr>
-    <tr>
-      <th>
-        <code>options.log</code>
-      </th>
-      <td>
-        <code>object</code>
-      </td>
-      <td>
-
-The looger to use for internal logs. An object with `{ debug, warn }` can be passed. Pass `console` to enable all logging.
-
-Defaults to no logging.
-
-</td>
-    </tr>
   </tbody>
 </table>
 
@@ -169,7 +201,9 @@ relay.on(eventName, callback);
 **Required**. Supported events are
 
 1. `webhook` - emitted when a webhook is received
-2. `error` - emitted when an error occurs
+1. `start` - emitted when the relay is started
+1. `stop` - emitted when the relay is stopped
+1. `error` - emitted when an error occurs
 
 </td>
     </tr>
@@ -191,6 +225,8 @@ When `eventName` is `webhook`, the callback is called with an object with the fo
 - `body` - the webhook payload as string[^1]
 - `signature` - the signature of the webhook payload
 - `headers` - the headers of the webhook request
+
+No arguments are passed when `eventName` is set to `start` or `stop`.
 
 When `eventName` is `error`, the callback is called with an error object.
 
@@ -231,12 +267,18 @@ const ws = new WebSocket(webSocketUrl, {
 });
 ```
 
-Webhooks are received as message. The message is a JSON string with a `Header` and `Body` keys. The `Body` is base64 encoded.
+Once the websocket is connected, the hook can be activated by setting the `active` property to `true` using [the `PATCH /repos/{owner}/{repo}/hooks/{hook_id}` endpoint](https://docs.github.com/en/rest/webhooks/repos?apiVersion=2022-11-28#update-a-repository-webhook).
 
-A response has to be send back within 10s, otherwise the webhook request will be canceled and time out. No further message will be sent until a response is sent back. The response has to be a JSON string as well with the keys `Status`, `Header`, and `Body`. The `Body` value needs to be base64 encoded.
+Each Webhook request is received with a separate message. The message is a JSON string with a `Header` and `Body` keys. The `Body` is base64 encoded.
+
+A response has to be sent back within 10s, otherwise the webhook request will be canceled and time out. No further message will be sent until a response is sent back. The response has to be a JSON string as well with the keys `Status`, `Header`, and `Body`. The `Body` value needs to be base64 encoded.
 
 Disconnecting from the websocket will automatically delete the repository webhook.
 
 ## License
 
 [ISC](LICENSE)
+
+```
+
+```
