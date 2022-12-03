@@ -15,17 +15,20 @@ const GitHubWebHookSocketOctokit = Octokit.defaults({
 
 export default class GitHubWebHookSocket {
   /**
-   * @param {import(".").GitHubWebHookRelay.Options} options
+   * @param {import("./internal").Options} options
    */
-  constructor({ owner, repo, events, createHookToken, webhookSecret }) {
+  constructor(options) {
     /** @type {import("./internal").State} */
     const state = {
-      owner,
-      repo,
-      webhookSecret,
-      events,
+      owner: options.owner,
+      repo: options.repo,
+      webhookSecret: options.webhookSecret,
+      events: options.events,
       eventEmitter: new EventEmitter(),
-      octokit: new GitHubWebHookSocketOctokit({ auth: createHookToken }),
+      octokit:
+        "octokit" in options
+          ? options.octokit
+          : new GitHubWebHookSocketOctokit({ auth: options.createHookToken }),
     };
 
     this.on = state.eventEmitter.addListener.bind(state.eventEmitter);

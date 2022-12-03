@@ -15,9 +15,6 @@ export default async function start(state) {
     id,
   } = await createWebhook(state);
 
-  state.hookId = id;
-  state.webSocketUrl = webSocketUrl;
-
   const authentication = await state.octokit.auth();
   const ws = new WebSocket(webSocketUrl, {
     headers: {
@@ -27,12 +24,13 @@ export default async function start(state) {
   });
 
   state.ws = ws;
+  state.hookId = id;
 
-  ws.on("open", async function open() {
-    await activateWebhook(state);
-
-    state.eventEmitter.emit("start");
+  ws.on("close", (code, reason) => {
+    state.eventEmitter.emit("stop");
   });
+
+  ws.on("error", (error) => state.eventEmitter.emit("error", error));
 
   ws.on("message", async (data) => {
     // sending a response within 10 seconds is required. Otherwise the webhook delivery times out from GitHub's perspective,
@@ -43,6 +41,7 @@ export default async function start(state) {
         Header: {},
         Body: Buffer.from("ok", "utf-8").toString("base64"),
       }),
+      /* c8 ignore next 5 */
       (error) => {
         if (error) {
           state.eventEmitter.emit("error", error);
@@ -77,9 +76,9 @@ export default async function start(state) {
     state.eventEmitter.emit("webhook", event);
   });
 
-  ws.on("close", (code, reason) => {
-    state.eventEmitter.emit("stop");
-  });
+  ws.on("open", async function open() {
+    await activateWebhook({ ...state, ws, hookId: id });
 
-  ws.on("error", (error) => state.eventEmitter.emit("error", error));
+    state.eventEmitter.emit("start");
+  });
 }

@@ -1,12 +1,19 @@
 import { EventPayloadMap } from "@octokit/webhooks-types";
+import { Octokit } from "@octokit/core";
 
 export namespace GitHubWebHookRelay {
   interface Options {
     owner: string;
     repo: string;
     events: (keyof EventPayloadMap)[];
-    createHookToken: string;
     webhookSecret?: string;
+  }
+
+  interface OptionsWithCreateHookToken extends GitHubWebHookRelay.Options {
+    createHookToken: string;
+  }
+  interface OptionsWithOctokit extends GitHubWebHookRelay.Options {
+    octokit: Octokit;
   }
 }
 
@@ -44,7 +51,11 @@ interface AddEventListener {
 }
 
 export default class GitHubWebHookRelay {
-  constructor(options: GitHubWebHookRelay.Options);
+  constructor(
+    options:
+      | GitHubWebHookRelay.OptionsWithCreateHookToken
+      | GitHubWebHookRelay.OptionsWithOctokit
+  );
   start(): Promise<void>;
   stop(): Promise<void>;
   on: AddEventListener;
