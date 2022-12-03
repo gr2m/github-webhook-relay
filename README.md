@@ -233,7 +233,7 @@ When `eventName` is `webhook`, the callback is called with an object with the fo
 
 - `id` - the webhook delivery GUID
 - `name` - the name of the event
-- `body` - the webhook payload as string[^1]
+- `body` - the webhook payload as string<sup>†</sup>
 - `signature` - the signature of the webhook payload
 - `headers` - the headers of the webhook request
 
@@ -241,7 +241,7 @@ No arguments are passed when `eventName` is set to `start` or `stop`.
 
 When `eventName` is `error`, the callback is called with an error object.
 
-[^1]: The webhook payload is passed as is in case the signature needs to be verified again. Parsing the JSON and later stringifying it again bight result in a signature mismatch.
+<sub>†The webhook payload is passed as is in case the signature needs to be verified again. Parsing the JSON and later stringifying it again bight result in a signature mismatch.</sub>
 
 </td>
     </tr>
@@ -289,7 +289,3 @@ Disconnecting from the websocket will automatically delete the repository webhoo
 ## License
 
 [ISC](LICENSE)
-
-```
-
-```
