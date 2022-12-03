@@ -35,8 +35,12 @@ relay.start();
 ### Use with Octokit
 
 ```js
-import { App } from "octokit";
+import { App, Octokit } from "octokit";
 import WebhookRelay from "github-webhook-relay";
+
+const MyOctokit = Octokit.defaults({
+  userAgent: "my-app/1.2.3",
+});
 
 const app = new App({
   appId: process.env.APP_ID,
@@ -44,6 +48,7 @@ const app = new App({
   webhooks: {
     secret: process.env.APP_WEBHOOK_SECRET,
   },
+  Octokit: MyOctokit,
 });
 
 app.webhooks.on("issues.opened", async ({ octokit }) => {
@@ -64,17 +69,10 @@ const relay = new WebhookRelay({
   owner: "gr2m",
   repo: "github-webhooks-relay",
   events: ["issues"],
-  createHookToken: process.env.APP_WEBHOOK_SECRET,
+  octokit: new MyOctokit({ auth: process.env.GITHUB_TOKEN }),
 });
 
-relay.on("webhook", ({ id, name, body, signature, headers }) => {
-  app.webhooks.verifyAndReceive({
-    id,
-    name,
-    payload: body,
-    signature,
-  });
-});
+relay.on("webhook", app.webhooks.verifyAndReceive);
 ```
 
 ## API
@@ -148,7 +146,20 @@ const relay = new WebhookRelay(options);
       </td>
       <td>
 
-**Required**. Access token to create the repository webhook. The token needs to have the `admin:repo_hook` scope. ([create a personal access token](https://github.com/settings/tokens/new?scopes=admin:repo_hook&description=github-webhook-relay)).
+**Required unless `options.octokit` is set**. Access token to create the repository webhook. The token needs to have the `admin:repo_hook` scope. ([create a personal access token](https://github.com/settings/tokens/new?scopes=admin:repo_hook&description=github-webhook-relay)).
+
+</td>
+    </tr>
+    <tr>
+      <th>
+        <code>options.octokit</code>
+      </th>
+      <td>
+        <code>ocotkit</code>
+      </td>
+      <td>
+
+**Required unless `options.createHookToken` is set**. `octokit` is an instance of [`@octokit/core`](https://github.com/octokit/core.js/#readme) or a compatible constructor such as [`octokit`'s `Octokit`](https://github.com/octokit/octokit.js#octokit-api-client).
 
 </td>
     </tr>
