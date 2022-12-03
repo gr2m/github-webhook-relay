@@ -1,3 +1,7 @@
+# ⚠️ This library is work-in-progress. ⚠️
+
+See [#1](https://github.com/gr2m/github-webhook-relay/pulls/1) for the current status
+
 # `github-webhook-relay`
 
 > **Warning**  
