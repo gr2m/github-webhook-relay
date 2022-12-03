@@ -16,6 +16,7 @@ export default async function start(state) {
   } = await createWebhook(state);
 
   const authentication = await state.octokit.auth();
+
   const ws = new WebSocket(webSocketUrl, {
     headers: {
       // @ts-expect-error - `authentication` is typed as unknown
