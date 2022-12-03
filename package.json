@@ -1,0 +1,65 @@
+{
+  "name": "github-webhook-relay",
+  "version": "0.0.0-development",
+  "description": "Receive webhooks from a GitHub repository via WebSocket",
+  "type": "module",
+  "exports": "./index.js",
+  "types": "./index.d.ts",
+  "repository": "github:gr2m/github-webhook-relay",
+  "keywords": [
+    "github",
+    "webhook",
+    "websocket"
+  ],
+  "author": "Gregor Martynus (https://github.com/gr2m",
+  "license": "ISC",
+  "scripts": {
+    "test": "npm run test:code && npm run test:tsc && npm run test:tsd && npm run lint",
+    "test:code": "c8 --100 ava test/*.test.js",
+    "test:tsc": "tsc --allowJs --noEmit --esModuleInterop --skipLibCheck --lib es2020 index.js",
+    "test:tsd": "tsd",
+    "lint": "prettier --check \"*.{js,json,ts,md}\" \".github/**/*.yml\"",
+    "lint:fix": "prettier --write \"*.{js,json,ts,md}\" \".github/**/*.yml\""
+  },
+  "dependencies": {
+    "@octokit/core": "^4.1.0",
+    "@octokit/webhooks-types": "^6.7.0",
+    "ws": "^8.11.0"
+  },
+  "devDependencies": {
+    "ava": "^5.1.0",
+    "c8": "^7.12.0",
+    "tsd": "^0.25.0"
+  },
+  "renovate": {
+    "extends": [
+      "github>gr2m/.github"
+    ]
+  },
+  "release": {
+    "branches": [
+      "+([0-9]).x",
+      "main",
+      "next",
+      {
+        "name": "beta",
+        "prerelease": true
+      }
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/github",
+      "@semantic-release/npm",
+      [
+        "semantic-release-plugin-update-version-in-files",
+        {
+          "files": [
+            "version.js"
+          ],
+          "placeholder": "0.0.0-development"
+        }
+      ]
+    ]
+  }
+}
