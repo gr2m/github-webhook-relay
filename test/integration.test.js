@@ -29,6 +29,7 @@ test("README example", async (t) => {
 
     octokit.hook.wrap("request", (request, options) => {
       const route = `${options.method} ${options.url}`;
+      options.headers["user-agent"] = "test";
       t.snapshot(options, route);
 
       return {
