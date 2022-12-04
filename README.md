@@ -113,7 +113,7 @@ const relay = new WebhookRelay(options);
     </tr>
     <tr>
       <th>
-        <code>options.name</code>
+        <code>options.repo</code>
       </th>
       <td>
         <code>string</code>
