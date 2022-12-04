@@ -9,11 +9,11 @@ import stop from "./api/stop.js";
 
 import VERSION from "./version.js";
 
-const GitHubWebHookSocketOctokit = Octokit.defaults({
+const GitHubWebHookRelayOctokit = Octokit.defaults({
   userAgent: `gr2m/github-webhook-relay/${VERSION}`,
 });
 
-export default class GitHubWebHookSocket {
+export default class GitHubWebHookRelay {
   /**
    * @param {import("./internal").Options} options
    */
@@ -28,7 +28,7 @@ export default class GitHubWebHookSocket {
       octokit:
         "octokit" in options
           ? options.octokit
-          : new GitHubWebHookSocketOctokit({ auth: options.createHookToken }),
+          : new GitHubWebHookRelayOctokit({ auth: options.createHookToken }),
     };
 
     this.on = state.eventEmitter.addListener.bind(state.eventEmitter);
