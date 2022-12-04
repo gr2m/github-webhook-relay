@@ -133,7 +133,7 @@ const relay = new WebhookRelay(options);
       </td>
       <td>
 
-**Required**. The list of strings that the webhook should subscribe to. For a list of supported event names, see [the GitHub docs](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads).
+**Required**. The list of events that the webhook should subscribe to. For a list of supported event names, see [the GitHub docs](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads).
 
 </td>
     </tr>
