@@ -155,7 +155,7 @@ const relay = new WebhookRelay(options);
         <code>options.octokit</code>
       </th>
       <td>
-        <code>ocotkit</code>
+        <code>octokit</code>
       </td>
       <td>
 
