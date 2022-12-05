@@ -1,5 +1,7 @@
 # `github-webhook-relay`
 
+> Receive webhooks from a GitHub repository via WebSocket
+>
 > **Warning**  
 > Receiving webhooks via websockets is currently in [private beta](https://github.blog/changelog/2022-11-16-webhook-forwarding-in-the-github-cli-public-beta/)
 
@@ -289,6 +291,11 @@ Disconnecting from the websocket will automatically delete the repository webhoo
 ## Contributing
 
 Please see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## See also
+
+- [`github-webhook-relay-cli`](https://github.com/gr2m/github-webhook-relay-cli/#readme) - CLI version of this library
+- [`github-app-webhook-relay`](https://github.com/gr2m/github-app-webhook-relay/#readme) - Webhook relay for GitHub Apps
 
 ## License
 
