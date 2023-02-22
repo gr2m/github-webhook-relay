@@ -4,7 +4,10 @@ import { Octokit } from "@octokit/core";
 export namespace GitHubWebHookRelay {
   interface Options {
     owner: string;
-    repo: string;
+    repo?: string;
+    // TODO: events should be set depending on whether the `repo` is set.
+    // If `repo` is set, the events should be limited to the events that have the `.repository` key in their payload
+    // If `repo` is not set, the events should be limited to the events that have the `.organization` key in their payload
     events: (keyof EventPayloadMap)[];
     webhookSecret?: string;
   }
