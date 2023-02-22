@@ -124,7 +124,7 @@ const relay = new WebhookRelay(options);
       </td>
       <td>
 
-When set, the webhook will be created for the repository. When not set, the webhook will be created for the organization.
+When set, the webhook will be created for the repository. When not set, the webhook will be created for the organization. Note that user-level webhooks are not supported by GitHub, so `options.owner` must be an organization.
 
 </td>
     </tr>
