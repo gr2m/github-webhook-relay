@@ -16,3 +16,17 @@ test("smoke", (t) => {
   t.true(relay.start instanceof Function);
   t.true(relay.stop instanceof Function);
 });
+
+test("smoke without repo argument", (t) => {
+  t.true(WebhookRelay instanceof Function);
+
+  const relay = new WebhookRelay({
+    owner: "gr2m-sandbox",
+    events: ["repository"],
+    createHookToken: "token",
+  });
+
+  t.true(relay.on instanceof Function);
+  t.true(relay.start instanceof Function);
+  t.true(relay.stop instanceof Function);
+});
