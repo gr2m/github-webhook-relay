@@ -120,3 +120,44 @@ test("with secret", async (t) => {
     });
   });
 });
+
+test("org webhook", async (t) => {
+  return new Promise(async (resolve, reject) => {
+    const port = await getPort();
+    const octokit = new TestOctokit({ t, port });
+
+    const wss = new WebSocketServer({ port });
+
+    wss.on("connection", function connection(ws) {
+      ws.on("message", (data) => {
+        t.snapshot(data.toString(), "response");
+        relay.stop();
+      });
+
+      ws.send(JSON.stringify(issuesOpenEvent));
+    });
+
+    const relay = new WebhookRelay({
+      owner: "gr2m-sandbox",
+      events: ["issues"],
+      octokit,
+      webhookSecret: "secret",
+    });
+
+    wss.on("error", reject);
+    relay.on("error", reject);
+
+    let startReceived;
+    relay.on("start", () => (startReceived = true));
+    relay.on("webhook", (event) => t.snapshot(event, "webhook"));
+    relay.on("stop", () => {
+      t.true(startReceived);
+      wss.close();
+      resolve();
+    });
+
+    wss.on("listening", async () => {
+      relay.start();
+    });
+  });
+});

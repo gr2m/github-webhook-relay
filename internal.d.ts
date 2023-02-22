@@ -12,7 +12,7 @@ export type Options =
 
 export type State = {
   owner: string;
-  repo: string;
+  repo?: string;
   events: (keyof EventPayloadMap)[];
   eventEmitter: EventEmitter;
   octokit: Octokit;

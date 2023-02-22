@@ -9,11 +9,7 @@ import activateWebhook from "../lib/activate-webhook.js";
  * @param {import("../internal").State} state
  */
 export default async function start(state) {
-  const {
-    // @ts-expect-error - `ws_url` is private beta
-    ws_url: webSocketUrl,
-    id,
-  } = await createWebhook(state);
+  const { ws_url: webSocketUrl, id } = await createWebhook(state);
 
   const authentication = await state.octokit.auth();
 
