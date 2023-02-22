@@ -23,3 +23,25 @@ export function readmeExample() {
 
   expectType<Promise<void>>(relay.start());
 }
+
+export function organizationRelay() {
+  const relay = new GitHubWebHookRelay({
+    owner: "gr2m-sandbox",
+    events: ["issues"],
+    createHookToken: "secret123",
+  });
+
+  relay.on("webhook", ({ id, name, body, signature, headers }) => {
+    expectType<string>(id);
+    expectType<string>(name);
+    expectType<string>(body);
+    expectType<string | undefined>(signature);
+    expectType<Record<string, string>>(headers);
+  });
+
+  relay.on("error", (error) => {
+    expectType<Error>(error);
+  });
+
+  expectType<Promise<void>>(relay.start());
+}
