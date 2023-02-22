@@ -9,7 +9,7 @@ A Node.js library that uses the same APIs as the [`gh webhook` plugin](https://g
 
 ## Usage
 
-The `createHookToken` option needs to be set to a [token with the `admin:repo_hook` scope](https://github.com/settings/tokens/new?scopes=admin:repo_hook&description=github-webhook-relay).
+The `createHookToken` option needs to be set to a [token with the `admin:repo_hook` and/or `admin:org_hook` scope](https://github.com/settings/tokens/new?scopes=admin:repo_hook,admin:org_hook&description=github-webhook-relay), depending on which you want to create.
 
 ### Minimal example
 
@@ -35,6 +35,8 @@ relay.start();
 ```
 
 ### Use with Octokit
+
+If you want to relay webhooks to a GitHub App, you can use [github-app-webhook-relay](https://github.com/gr2m/github-app-webhook-relay).
 
 ```js
 import { App, Octokit } from "octokit";
@@ -122,7 +124,7 @@ const relay = new WebhookRelay(options);
       </td>
       <td>
 
-**Required**. The repository name
+When set, the webhook will be created for the repository. When not set, the webhook will be created for the organization.
 
 </td>
     </tr>
