@@ -46,7 +46,11 @@ export default async function start(state) {
       }
     );
 
-    const { Body: bodyBase64, Header: headersRaw } = JSON.parse(String(data));
+    const parsedData = JSON.parse(String(data));
+    // payload keys seem to have been lowercased. We check for both in order to be more resilient
+    // https://github.com/gr2m/github-webhook-relay/issues/4
+    const bodyBase64 = parsedData.Body || parsedData.body;
+    const headersRaw = parsedData.Header || parsedData.header;
     const body = Buffer.from(bodyBase64, "base64").toString("utf-8");
 
     const headers = Object.entries(headersRaw).reduce(
