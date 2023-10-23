@@ -194,7 +194,7 @@ const payload = {
 };
 
 export const issuesOpenEvent = {
-  Header: {
+  header: {
     Accept: ["*/*"],
     "Accept-Encoding": ["gzip"],
     Connection: ["close"],
@@ -229,7 +229,7 @@ export const issuesOpenEvent = {
     "X-Region": [""],
     "X-Request-Start": ["t=1670037916824124"],
   },
-  Body: Buffer.from(JSON.stringify(payload), "utf-8").toString("base64"),
-  DeliveryID: "1b15a400-72ba-11ed-9d3d-080a77593b44",
-  RequestID: "2438:23D7:56198:4318A1:638AC19C",
+  body: Buffer.from(JSON.stringify(payload), "utf-8").toString("base64"),
+  delivery_id: "1b15a400-72ba-11ed-9d3d-080a77593b44",
+  request_id: "2438:23D7:56198:4318A1:638AC19C",
 };
