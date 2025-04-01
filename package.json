@@ -24,8 +24,8 @@
     "postcoverage": "open-cli coverage/index.html"
   },
   "dependencies": {
-    "@octokit/core": "^4.1.0",
-    "@octokit/webhooks-types": "^6.7.0",
+    "@octokit/core": "^6.1.0",
+    "@octokit/webhooks-types": "^7.6.0",
     "ws": "^8.11.0"
   },
   "devDependencies": {
